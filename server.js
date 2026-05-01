@@ -4,7 +4,6 @@ const express = require('express');
 const mysql = require('mysql2');
 const bcrypt = require('bcrypt');
 const cors = require('cors');
-const db = mysql.createConnection(process.env.MYSQL_PUBLIC_URL);
 const app = express();
 
 // ✅ Middlewares FIRST
