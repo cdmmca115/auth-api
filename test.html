@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Register User</h2>
+
+<input id="username" placeholder="Username"><br><br>
+<input id="password" placeholder="Password" type="password"><br><br>
+<input id="role" placeholder="Role"><br><br>
+
+<button onclick="register()">Register</button>
+
+<p id="result"></p>
+
+<script>
+async function register() {
+    try {
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+        const role = document.getElementById("role").value;
+
+        const res = await fetch("http://localhost:3000/register", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ username, password, role })
+        });
+
+        const data = await res.text();
+        document.getElementById("result").innerText = data;
+
+    } catch (error) {
+        document.getElementById("result").innerText = "Error: " + error;
+    }
+}
+
+</script>
+
+<h2>Login</h2>
+
+<input id="loginUser" placeholder="Username"><br><br>
+<input id="loginPass" type="password" placeholder="Password"><br><br>
+
+<button onclick="login()">Login</button>
+
+<p id="loginResult"></p>
+
+<script>
+async function login() {
+    const username = document.getElementById("loginUser").value;
+    const password = document.getElementById("loginPass").value;
+
+    const res = await fetch("http://localhost:3000/login", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ username, password })
+    });
+
+    const data = await res.json();
+
+    document.getElementById("loginResult").innerText = JSON.stringify(data);
+}
+</script>
+
+<h2>Dashboard</h2>
+
+<button onclick="getDashboard()">Get Dashboard</button>
+
+<p id="dashResult"></p>
+
+<script>
+async function getDashboard() {
+
+    const token = document.getElementById("loginResult").innerText;
+    const parsed = JSON.parse(token);
+
+    const res = await fetch("http://localhost:3000/dashboard", {
+        method: "GET",
+        headers: {
+            "Authorization": parsed.token
+        }
+    });
+
+    const data = await res.text();
+
+    document.getElementById("dashResult").innerText = data;
+}
+</script>
+
+<h2>Admin</h2>
+
+<button onclick="getAdmin()">Get Admin Data</button>
+
+<p id="adminResult"></p>
+
+<script>
+async function getAdmin() {
+
+    const tokenText = document.getElementById("loginResult").innerText;
+    const parsed = JSON.parse(tokenText);
+
+    const res = await fetch("http://localhost:3000/admin-data", {
+        method: "GET",
+        headers: {
+            "Authorization": parsed.token
+        }
+    });
+
+    const data = await res.text();
+
+    document.getElementById("adminResult").innerText = data;
+}
+</script>
+
+</body>
+</html>
